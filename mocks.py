@@ -5,13 +5,12 @@ from flexmock import flexmock
 # Super convoluted example that we want to test:
 #
 
-class UserService:
-    def upgrade_user_by_id(user_id):
-        user = self.get_user_by_id(user_id)
-        if user.admin:
-            user.super_admin = true
-        else:
-            user.admin = true
+def upgrade_user(user, log=Logger()):
+    if user.admin:
+        user.super_admin = True
+    else:
+        user.admin = True
+    log.add("Upgraded user: " + user.id)
 
 #
 # Traditional tests:
@@ -19,25 +18,27 @@ class UserService:
 
 class TestUpgradeUser(unittest.TestCase):
     def setUp(self):
-        self.user_service = UserService()
         # Load some fixtures or something for a regular user and an admin user
         pass
         
     def test_upgrades_from_normal_to_admin(self):
-        self.user_service.upgrade_user_by_id(123)
-        
-        # Takes multiple steps to verify:
-        user = self.user_service.get_user_by_id(123)
+        # Some user we loaded in a fixture that is not an admin:
+        user = User(123)
+        upgrade_user(user)
         self.assertTrue(user.admin)
         self.assertFalse(user.super_admin)
 
     def test_upgrades_from_admin_to_super_admin(self):
-        self.user_service.upgrade_user_by_id(321)
-        
-        # Takes multiple steps to verify:
-        user = self.user_service.get_user_by_id(321)
+        # Some user we loaded in a fixture that is an admin:
+        user = User(321)
+        upgrade_user(user)
         self.assertTrue(user.admin)
         self.assertTrue(user.super_admin)
+    
+    def test_adds_log_message(self):
+        # Some crazy-ass test here, read the test log maybe? Gross.
+        #...
+        pass
 
 #
 # Mock-based test.
@@ -63,14 +64,22 @@ class TestUpgradeUserMock(unittest.TestCase):
     """
     
     def test_upgrade_user(self):
-        user = flexmock()
+        user = flexmock(id=123)
+        log = flexmock()
+        
         user.should_receive('upgrade')
-        upgrade_user_refactored(user) # If we call this method, and it doesn't
-                                      # call user.upgrade(), our test will fail
+        log.should_receive('add').with("Upgraded user: 123")
+        
+        # If either of the above methods are not called, or called with the
+        # wrong parameters in the case of the log message, then our test
+        # will fail.
+        
+        upgrade_user_refactored(user)
 
-# The new implementation:
-def upgrade_user_refactored(user):
+# The new implementation. Much more straightforward.
+def upgrade_user_refactored(user_id, log=Logger()):
     user.upgrade()
+    log.add("Upgraded user: " + user.id)
 
 # I didn't go as far as making this something you could actually run, sorry!
 # if __name__ == '__main__':
