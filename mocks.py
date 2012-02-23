@@ -74,7 +74,9 @@ class TestUpgradeUserMock(unittest.TestCase):
         # wrong parameters in the case of the log message, then our test
         # will fail.
         
-        upgrade_user_refactored(user)
+        # This is also a trivial example of dependency injection (we can pass
+        # in our own logger, a test double in this case):
+        upgrade_user_refactored(user, log)
 
 # The new implementation. Much more straightforward.
 def upgrade_user_refactored(user_id, log=Logger()):
