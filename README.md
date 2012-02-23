@@ -1,5 +1,5 @@
-An example of stubbing and mocking in python using flexmock, with explanations
-of when and why to use each.
+An example of stubbing and mocking in python using [flexmock][1], with
+explanations of when and why to use each.
 
 Start with `stubs.py` and then read `mocks.py`.
 
@@ -14,3 +14,5 @@ people smarter than me:
   * <http://www.jmock.org/oopsla2004.pdf>
 * Pay the man and watch them all:
   * <https://www.destroyallsoftware.com/screencasts/catalog>
+
+[1]: http://pypi.python.org/pypi/flexmock
