@@ -1,7 +1,7 @@
 An example of stubbing and mocking in python using flexmock, with explanations
 of when and why to use each.
 
-Start with **`stubs.py`** and then read **`mocks.py`**.
+Start with `stubs.py` and then read `mocks.py`.
 
 DISCLAIMER: I am by no means an expert. I'm still learning. Here are some
 people smarter than me:
